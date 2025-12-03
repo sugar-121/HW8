@@ -11,7 +11,7 @@ public class Main {
         try {
             connection.setAutoCommit(false);
             Statement statement = connection.createStatement();
-            statement.execute("create table users (id INTEGER)");
+            statement.execute("drop table users");
             statement.close();
             connection.commit();
         } catch (SQLException e) {
