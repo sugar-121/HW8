@@ -70,6 +70,10 @@ public class Main {
                                 case 1: {
                                     System.out.println("""
                                             1. card registration
+                                            2. delete card
+                                            3. show card by its number
+                                            4. show cards by bank name
+                                            5. show all cards
                                             """);
                                     switch (inI.nextInt()) {
                                         case 1: {
@@ -80,6 +84,41 @@ public class Main {
                                             Cards card = new Cards(bankName , amount);
                                             cardsRepository.insertCard(card,memberId);
                                             break;
+                                        }
+                                        case 2: {
+                                            System.out.println("Enter the bank name: ");
+                                            String bankName = inS.nextLine();
+                                            cardsRepository.showCardByName(bankName,memberId);
+                                            System.out.println("Enter the id of the card you wanna delete. ");
+                                            cardsRepository.deleteCardById(inI.nextInt());
+                                            break;
+                                        }
+                                        case 3: {
+                                            System.out.println("Enter the number of your card: ");
+                                            cardsRepository.showCardByNumber(inI.nextInt(),memberId);
+                                            break;
+                                        }
+                                        case 4: {
+                                            System.out.println("Enter the Bank name: ");
+                                            cardsRepository.showCardByName(inS.nextLine(),memberId);
+                                            break;
+                                        }
+                                        case 5: {
+                                            System.out.println("This is the list of your cards: ");
+                                            cardsRepository.showAllCards(memberId);
+                                            break;
+                                        }
+
+                                    }
+                                    break;
+                                }
+                                case 2: {
+                                    System.out.println("""
+                                            1. card to card transfer
+                                            """);
+                                    switch (inI.nextInt()){
+                                        case 1: {
+
                                         }
                                     }
                                 }
