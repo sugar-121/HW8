@@ -9,9 +9,9 @@ import java.util.Scanner;
 
 public class Menu {
         Scanner in = new Scanner(System.in);
-        MemberRepository memberRepo = ApplicationContext.getInstance().getMemberRepository();
-        CardsRepository cardsRepo = ApplicationContext.getInstance().getCardsRepository();
-        TransactionsRepository transRepo = ApplicationContext.getInstance().getTransactionsRepository();
+        MemberRepository memberRepository = ApplicationContext.getInstance().getMemberRepository();
+        CardsRepository cardsRepository = ApplicationContext.getInstance().getCardsRepository();
+        TransactionsRepository transactionsRepository = ApplicationContext.getInstance().getTransactionsRepository();
 
         public void start() {
             while (true) {
@@ -45,7 +45,7 @@ public class Menu {
                 in.nextLine();
 
                 Members m = new Members(username, password);
-                if (memberRepo.regMember(m)) {
+                if (memberRepository.regMember(m)) {
                     System.out.println("Signup successful.");
                     return;
                 }
@@ -62,7 +62,7 @@ public class Menu {
                 in.nextLine();
 
                 Members m = new Members(username, password);
-                int id = memberRepo.fetchMember(m);
+                int id = memberRepository.fetchMember(m);
 
                 if (id != -1) {
                     System.out.println("Logged in successfully!");
@@ -115,30 +115,30 @@ public class Menu {
                         int amount = in.nextInt();
                         in.nextLine();
 
-                        cardsRepo.insertCard(new Cards(bank, amount), memberId);
+                        cardsRepository.insertCard(new Cards(bank, amount), memberId);
                     }
                     case 2 -> {
                         System.out.println("Enter bank name: ");
                         String bank = in.nextLine();
-                        cardsRepo.showCardByName(bank, memberId);
+                        cardsRepository.showCardByName(bank, memberId);
                         System.out.println("Enter card ID to delete: ");
                         int id = in.nextInt();
                         in.nextLine();
 
-                        cardsRepo.deleteCardById(id);
+                        cardsRepository.deleteCardById(id);
                     }
                     case 3 -> {
                         System.out.println("Enter card number: ");
                         int num = in.nextInt();
                         in.nextLine();
-                        cardsRepo.showCardByNumber(num, memberId);
+                        cardsRepository.showCardByNumber(num, memberId);
                     }
                     case 4 -> {
                         System.out.println("Enter bank name: ");
                         String bank = in.nextLine();
-                        cardsRepo.showCardByName(bank, memberId);
+                        cardsRepository.showCardByName(bank, memberId);
                     }
-                    case 5 -> cardsRepo.showAllCards(memberId);
+                    case 5 -> cardsRepository.showAllCards(memberId);
                     case 6 -> { return; }
                     default -> System.out.println("Invalid choice.");
                 }
@@ -175,7 +175,7 @@ public class Menu {
             in.nextLine();
 
             try {
-                transRepo.cardToCardTransaction(src, dest, amount);
+                transactionsRepository.cardToCardTransaction(src, dest, amount);
             } catch (Exception e) {
                 System.out.println("Transaction failed.");
             }
@@ -190,7 +190,7 @@ public class Menu {
             int amount = in.nextInt();
             in.nextLine();
 
-            transRepo.insertIntoPayaTransactions(src, dest, amount);
+            transactionsRepository.insertIntoPayaTransactions(src, dest, amount);
         }
     }
 
