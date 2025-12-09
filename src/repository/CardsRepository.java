@@ -64,7 +64,7 @@ public class CardsRepository {
 
     public void showCardByNumber(int number, int memberId) {
         try {
-            String sql = "select id , name , number, sheba , amount from cards where number = " + number + "and member_id = " + memberId;
+            String sql = "select id , name , number, sheba , amount from cards where number = " + number + " and member_id = " + memberId;
             Statement s = connection.createStatement();
             ResultSet resultSet = s.executeQuery(sql);
             if (resultSet.next()) {
@@ -80,7 +80,8 @@ public class CardsRepository {
             throw new RuntimeException(e);
         }
     }
-    public void showAllCards(int memberId){
+
+    public void showAllCards(int memberId) {
         try {
             String sql = "select id , name , number, sheba , amount from cards where member_id = " + memberId;
             Statement s = connection.createStatement();
@@ -95,6 +96,53 @@ public class CardsRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public int fetchCardAmountByNumber(int cardNumber) {
+        try {
+            String sql = "select amount from cards where number = " + cardNumber;
+            Statement s = connection.createStatement();
+            ResultSet resultSet = s.executeQuery(sql);
+            if (resultSet.next()) {
+                return resultSet.getInt("amount");
+            } else {
+                throw new SQLException();
+            }
+        } catch (SQLException e) {
+            return -1;
+        }
+    }
+
+    public int fetCardIdByNumber(int cardNumber) {
+        try {
+            String sql = "select id from cards where number = " + cardNumber;
+            Statement s = connection.createStatement();
+            ResultSet resultSet = s.executeQuery(sql);
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            } else {
+                throw new SQLException();
+            }
+        } catch (SQLException e) {
+        return -1;
+        }
+
+//    public void updateAmount(int )
+    }
+    public int fetchMemberIdByNumber(int cardNumber){
+        try {
+            String sql = "select member_id from cards where number = " + cardNumber;
+            Statement s = connection.createStatement();
+            ResultSet resultSet = s.executeQuery(sql);
+            if(resultSet.next()){
+                return resultSet.getInt("member_id");
+            }else {
+                throw new SQLException();
+            }
+        } catch (SQLException e) {
+            System.out.println("Some thing went wrong!");
+            return -1;
         }
     }
 }

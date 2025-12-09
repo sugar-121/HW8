@@ -1,5 +1,9 @@
 package util;
 
+import repository.CardsRepository;
+import repository.MemberRepository;
+import repository.TransactionsRepository;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,6 +11,9 @@ import java.sql.SQLException;
 public class ApplicationContext {
     private static ApplicationContext CTX;
     private Connection connection;
+    CardsRepository cardsRepository;
+    MemberRepository memberRepository;
+    TransactionsRepository transactionsRepository;
 
 
     private ApplicationContext() {
@@ -32,4 +39,23 @@ public class ApplicationContext {
         }
         return connection;
     }
+    public CardsRepository getCardsRepository(){
+        if (cardsRepository == null){
+            cardsRepository = new CardsRepository();
+        }
+        return cardsRepository;
+    }
+    public MemberRepository getMemberRepository(){
+        if (memberRepository == null){
+            memberRepository = new MemberRepository();
+        }
+        return memberRepository;
+    }
+    public TransactionsRepository getTransactionsRepository(){
+        if (transactionsRepository == null){
+            transactionsRepository = new TransactionsRepository();
+        }
+        return transactionsRepository;
+    }
+
 }

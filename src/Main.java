@@ -2,9 +2,11 @@ import entity.Cards;
 import entity.Members;
 import repository.CardsRepository;
 import repository.MemberRepository;
+import repository.TransactionsRepository;
 import util.ApplicationContext;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -12,8 +14,9 @@ public class Main {
     public static void main(String[] args) {
         ApplicationContext ctx = ApplicationContext.getInstance();
         Connection connection = ctx.getConnection();
-        MemberRepository memberRepository = new MemberRepository();
-        CardsRepository cardsRepository = new CardsRepository();
+        MemberRepository memberRepository;
+        CardsRepository cardsRepository;
+        TransactionsRepository transactionsRepository;
         Scanner inS = new Scanner(System.in);
         Scanner inI = new Scanner(System.in);
         Random random = new Random();
@@ -25,41 +28,42 @@ public class Main {
                     3. exit
                     """);
             int choice = inI.nextInt();
+            memberRepository = ctx.getMemberRepository();
 
             switch (choice) {
                 case 1: {
-                    while (true){
+                    while (true) {
                         System.out.println("Please enter a user name: ");
                         String userName = inS.nextLine();
                         System.out.println("Please enter a password: ");
                         int password = inI.nextInt();
                         Members member = new Members(userName, password);
                         boolean b = memberRepository.regMember(member);
-                        if (!b){
+                        if (!b) {
                             System.out.println("Sorry! your user name is taken. enter another one.");
-                        }else {
+                        } else {
                             break;
                         }
                     }
                     System.out.println("You signed up successfully.");
-                        System.out.println("""
-                                1. main menu
-                                2. exit
-                                """);
-                        if (inI.nextInt() == 2) {
-                            flag = false;
-                        }
+                    System.out.println("""
+                            1. main menu
+                            2. exit
+                            """);
+                    if (inI.nextInt() == 2) {
+                        flag = false;
                     }
-                    break;
+                }
+                break;
                 case 2: {
-                    while (true){
+                    while (true) {
                         System.out.println("Enter your user name: ");
                         String userName = inS.nextLine();
                         System.out.println("Enter your password: ");
                         int password = inI.nextInt();
-                        Members member = new Members(userName,password);
+                        Members member = new Members(userName, password);
                         int memberId = memberRepository.fetchMember(member);
-                        if (memberId != -1){
+                        if (memberId != -1) {
                             System.out.println("You are in!! ");
                             System.out.println("Choose your service: ");
                             System.out.println("""
@@ -68,6 +72,7 @@ public class Main {
                                     """);
                             switch (inI.nextInt()) {
                                 case 1: {
+                                    cardsRepository = ctx.getCardsRepository();
                                     System.out.println("""
                                             1. card registration
                                             2. delete card
@@ -81,26 +86,26 @@ public class Main {
                                             String bankName = inS.nextLine();
                                             System.out.println("Enter the amount of money you wanna put in: ");
                                             int amount = inI.nextInt();
-                                            Cards card = new Cards(bankName , amount);
-                                            cardsRepository.insertCard(card,memberId);
+                                            Cards card = new Cards(bankName, amount);
+                                            cardsRepository.insertCard(card, memberId);
                                             break;
                                         }
                                         case 2: {
                                             System.out.println("Enter the bank name: ");
                                             String bankName = inS.nextLine();
-                                            cardsRepository.showCardByName(bankName,memberId);
+                                            cardsRepository.showCardByName(bankName, memberId);
                                             System.out.println("Enter the id of the card you wanna delete. ");
                                             cardsRepository.deleteCardById(inI.nextInt());
                                             break;
                                         }
                                         case 3: {
                                             System.out.println("Enter the number of your card: ");
-                                            cardsRepository.showCardByNumber(inI.nextInt(),memberId);
+                                            cardsRepository.showCardByNumber(inI.nextInt(), memberId);
                                             break;
                                         }
                                         case 4: {
                                             System.out.println("Enter the Bank name: ");
-                                            cardsRepository.showCardByName(inS.nextLine(),memberId);
+                                            cardsRepository.showCardByName(inS.nextLine(), memberId);
                                             break;
                                         }
                                         case 5: {
@@ -113,17 +118,31 @@ public class Main {
                                     break;
                                 }
                                 case 2: {
+                                    transactionsRepository = ctx.getTransactionsRepository();
                                     System.out.println("""
                                             1. card to card transfer
                                             """);
-                                    switch (inI.nextInt()){
+                                    switch (inI.nextInt()) {
                                         case 1: {
-
+                                            boolean innerFlag = false;
+                                            while (!innerFlag) {
+                                                System.out.println("Enter the source card number: ");
+                                                int srcNumber = inI.nextInt();
+                                                System.out.println("Enter the destination card number: ");
+                                                int destNumber = inI.nextInt();
+                                                System.out.println("Enter the amount you wanna transfer: ");
+                                                int amount = inI.nextInt();
+                                                try {
+                                                    innerFlag = transactionsRepository.cardToCardTransaction(srcNumber, destNumber, amount);
+                                                } catch (SQLException e) {
+                                                    System.out.println("Unsuccessful");
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }else {
+                        } else {
                             System.out.println("Wrong user name or password. Try again. ");
                         }
                     }
