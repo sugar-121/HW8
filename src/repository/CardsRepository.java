@@ -114,7 +114,7 @@ public class CardsRepository {
         }
     }
 
-    public int fetCardIdByNumber(int cardNumber) {
+    public int fetchCardIdByNumber(int cardNumber) {
         try {
             String sql = "select id from cards where number = " + cardNumber;
             Statement s = connection.createStatement();
@@ -141,8 +141,21 @@ public class CardsRepository {
                 throw new SQLException();
             }
         } catch (SQLException e) {
-            System.out.println("Some thing went wrong!");
             return -1;
+        }
+    }
+    public String fetchNameByNumber(int cardNumber){
+        try {
+            String sql = "select name from cards where number = " + cardNumber;
+            Statement s = connection.createStatement();
+            ResultSet resultSet = s.executeQuery(sql);
+            if(resultSet.next()){
+                return resultSet.getString("name");
+            }else {
+                throw new SQLException();
+            }
+        } catch (SQLException e) {
+            return null;
         }
     }
 }
